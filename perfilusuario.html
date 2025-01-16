@@ -58,17 +58,16 @@
     <div id="step1">
       <h1>Digite o nome do seu usuário:</h1>
       <input type="text" id="username" placeholder="Seu nome" style="padding: 10px; font-size: 16px;">
-      <button onclick="nextStep(2)">Próximo</button>
+      <button id="next1">Próximo</button>
     </div>
     <div id="step2" style="display: none;">
       <h1>Escolha um avatar:</h1>
       <div class="avatar-list">
-        <!-- Substitua os links abaixo pelos seus -->
-        <img src="https://via.placeholder.com/80" alt="Avatar 1" class="avatar" onclick="selectAvatar('https://via.placeholder.com/80')">
-        <img src="https://via.placeholder.com/80" alt="Avatar 2" class="avatar" onclick="selectAvatar('https://via.placeholder.com/80')">
-        <img src="https://via.placeholder.com/80" alt="Avatar 3" class="avatar" onclick="selectAvatar('https://via.placeholder.com/80')">
+        <img src="https://via.placeholder.com/80" alt="Avatar 1" class="avatar" data-avatar="https://via.placeholder.com/80">
+        <img src="https://via.placeholder.com/80" alt="Avatar 2" class="avatar" data-avatar="https://via.placeholder.com/80">
+        <img src="https://via.placeholder.com/80" alt="Avatar 3" class="avatar" data-avatar="https://via.placeholder.com/80">
       </div>
-      <button onclick="nextStep(3)">Próximo</button>
+      <button id="next2">Próximo</button>
     </div>
   </div>
 
@@ -94,25 +93,22 @@
       avatar: ''
     };
 
-    function nextStep(step) {
-      gsap.to(`#step${step - 1}`, { opacity: 0, duration: 0.5, onComplete: () => {
-        document.getElementById(`step${step - 1}`).style.display = 'none';
-        document.getElementById(`step${step}`).style.display = 'block';
-        gsap.fromTo(`#step${step}`, { opacity: 0 }, { opacity: 1, duration: 0.5 });
-      }});
-    }
-
-    function selectAvatar(avatar) {
-      userData.avatar = avatar;
-      alert('Avatar selecionado!');
-    }
-
-    async function saveUserData() {
+    // Avançar para o próximo passo
+    const next1 = document.getElementById('next1');
+    next1.addEventListener('click', () => {
       const usernameInput = document.getElementById('username');
-      userData.username = usernameInput.value;
+      if (usernameInput.value.trim() === '') {
+        alert('Por favor, digite seu nome!');
+        return;
+      }
+      userData.username = usernameInput.value.trim();
+      changeStep(1, 2);
+    });
 
-      if (!userData.username || !userData.avatar) {
-        alert('Por favor, complete todas as etapas!');
+    const next2 = document.getElementById('next2');
+    next2.addEventListener('click', async () => {
+      if (userData.avatar === '') {
+        alert('Por favor, selecione um avatar!');
         return;
       }
 
@@ -132,6 +128,23 @@
       } catch (error) {
         alert('Erro ao se conectar com o servidor!');
       }
+    });
+
+    // Seleção de avatar
+    document.querySelectorAll('.avatar').forEach(avatar => {
+      avatar.addEventListener('click', function () {
+        userData.avatar = this.getAttribute('data-avatar');
+        alert('Avatar selecionado!');
+      });
+    });
+
+    // Função para trocar de etapa
+    function changeStep(current, next) {
+      gsap.to(`#step${current}`, { opacity: 0, duration: 0.5, onComplete: () => {
+        document.getElementById(`step${current}`).style.display = 'none';
+        document.getElementById(`step${next}`).style.display = 'block';
+        gsap.fromTo(`#step${next}`, { opacity: 0 }, { opacity: 1, duration: 0.5 });
+      }});
     }
   </script>
 </body>
