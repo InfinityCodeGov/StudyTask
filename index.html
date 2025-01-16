@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bem-vindo Aluno</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script type="module" src="https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js"></script>
+  <script type="module" src="https://www.gstatic.com/firebasejs/11.2.0/firebase-auth.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: url('https://raw.githubusercontent.com/InfinityCodeGov/StudyTask/refs/heads/main/1045369_original_1768x3648_1737046447.jpg') no-repeat center center fixed;
+      background-size: cover;
+      height: 100vh;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      backdrop-filter: blur(2px);
+    }
+
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 20px;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    }
+
+    .btn {
+      font-size: 1.2rem;
+      font-weight: 600;
+      padding: 10px 20px;
+      color: #fff;
+      background: linear-gradient(90deg, #1d976c, #93f9b9);
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      outline: none;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    }
+
+    .btn:hover {
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+<body>
+  <h1>Bem-vindo Aluno</h1>
+  <button id="googleLoginBtn" class="btn">Entrar com o Google</button>
+
+  <script type="module">
+    // Configuração do Firebase
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
+    import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBUz7v9zX8zpnj7zkiYeuFV5k7XqNkmzWw",
+      authDomain: "studytask-85fed.firebaseapp.com",
+      projectId: "studytask-85fed",
+      storageBucket: "firebasestorage.app",
+      messagingSenderId: "1049893127668",
+      appId: "1:1049893127668:web:d30395ddbc51a4cea565a1",
+      measurementId: "G-QV9LSE6ZVN"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth();
+    const provider = new GoogleAuthProvider();
+
+    document.getElementById("googleLoginBtn").addEventListener("click", () => {
+      signInWithPopup(auth, provider)
+        .then((result) => {
+          console.log(result.user);
+          window.location.href = "perfilusuario.html"; // Redireciona para a página de perfil
+        })
+        .catch((error) => {
+          console.error("Erro no login:", error);
+        });
+    });
+
+    // Animação GSAP
+    gsap.fromTo("h1", { opacity: 0, y: -50 }, { opacity: 1, y: 0, duration: 1 });
+    gsap.fromTo(".btn", { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 1, delay: 0.5 });
+  </script>
+</body>
+</html>
